@@ -16,6 +16,7 @@ import {
 
 
 import SMSListener from 'react-native-android-sms-listener';
+import SmsSend from 'react-native-sms';
 //import SendSMS from 'react-native-send-sms';
 
 
@@ -39,8 +40,25 @@ const App: () => React$Node = () => {
         let subscription = SMSListener.addListener(msg => {
 
           const { originatingAddress, body, timestamp } = msg;
-          alert(`Recebeu um SMS: ${body}`)
+          console.log(`Recebeu um SMS: ${body}`)
           console.log(originatingAddress);
+
+          SmsSend.send({
+            body: 'Aqui vai o feedback',
+            recipients: [`${originatingAddress}`.replace("+244", "")],
+            successTypes: ['sent', 'queued'],
+            allowAndroidSendWithoutReadPermission: true
+          }, (comlpeted, cancelled, error) => {
+
+            console.log(`
+            
+              SMS Callback: completed ${comlpeted},
+              cancelled: ${cancelled},
+              error: ${error}
+            
+            `);
+
+          })
 
 
 
